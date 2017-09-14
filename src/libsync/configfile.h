@@ -72,6 +72,9 @@ public:
     /* Force sync interval, in milliseconds */
     quint64 forceSyncInterval(const QString &connection = QString()) const;
 
+    /** Interval within which full local discovery is required, -1 to disable */
+    qint64 fullLocalDiscoveryInterval() const;
+
     bool monoIcons() const;
     void setMonoIcons(bool);
 

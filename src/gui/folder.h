@@ -27,6 +27,7 @@
 
 #include <QObject>
 #include <QStringList>
+#include <set>
 
 class QThread;
 class QSettings;
@@ -312,6 +313,9 @@ private slots:
      */
     void slotScheduleThisFolder();
 
+    /** Ensures that the next sync performs a full local discovery. */
+    void slotNextSyncFullLocalDiscovery();
+
 private:
     bool setIgnoredFiles();
 
@@ -346,6 +350,7 @@ private:
     QString _lastEtag;
     QElapsedTimer _timeSinceLastSyncDone;
     QElapsedTimer _timeSinceLastSyncStart;
+    QElapsedTimer _timeSinceLastFullLocalDiscovery;
     qint64 _lastSyncDuration;
 
     /// The number of syncs that failed in a row.
@@ -380,6 +385,14 @@ private:
      * Created by registerFolderWatcher(), triggers slotWatchedPathChanged()
      */
     FolderWatcher *_folderWatcher = 0;
+
+    /**
+     * Collection of files the filewatchers have reported as touched.
+     *
+     * Will be fed into the sync engine to control which parts of the
+     * local tree can be read from the db.
+     */
+    std::set<QByteArray> _locallyModifiedDirs;
 };
 }
 
